@@ -1,0 +1,101 @@
+@model badminton4all.Models.Player
+
+@{
+    ViewData["Title"] = "Register Player";
+    var courts = ViewBag.Courts as List<string>;
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0"><i class="fas fa-user-plus"></i> Player Registration</h3>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted mb-4">Join our badminton community! Fill out the form below to create your player profile.</p>
+
+                    <form asp-action="Register" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="FullName" class="form-label"></label>
+                            <input asp-for="FullName" class="form-control" placeholder="Enter your full name" />
+                            <span asp-validation-for="FullName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" class="form-control" placeholder="your.email@example.com" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="PhoneNumber" class="form-label"></label>
+                            <input asp-for="PhoneNumber" class="form-control" placeholder="555-0123 (optional)" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="SkillLevel" class="form-label"></label>
+                            <select asp-for="SkillLevel" class="form-select" asp-items="Html.GetEnumSelectList<badminton4all.Models.SkillLevel>()">
+                                <option value="">-- Select Skill Level --</option>
+                            </select>
+                            <span asp-validation-for="SkillLevel" class="text-danger"></span>
+                            <div class="form-text">
+                                <small>
+                                    <strong>Beginner:</strong> Just starting out<br>
+                                    <strong>Intermediate:</strong> Regular player with basic skills<br>
+                                    <strong>Advanced:</strong> Competitive club player<br>
+                                    <strong>Expert:</strong> Tournament-level player<br>
+                                    <strong>Professional:</strong> Professional athlete
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ProfilePictureUrl" class="form-label"></label>
+                            <input asp-for="ProfilePictureUrl" class="form-control" placeholder="https://example.com/photo.jpg (optional)" />
+                            <span asp-validation-for="ProfilePictureUrl" class="text-danger"></span>
+                            <div class="form-text">Enter a URL to your profile picture</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Preferred Courts</label>
+                            <div class="card">
+                                <div class="card-body">
+                                    @if (courts != null && courts.Any())
+                                    {
+                                        @foreach (var court in courts)
+                                        {
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="selectedCourts" value="@court" id="court_@court.Replace(" ", "_")">
+                                                <label class="form-check-label" for="court_@court.Replace(" ", "_")">
+                                                    @court
+                                                </label>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-text">Select one or more courts where you prefer to play</div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-check"></i> Complete Registration
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

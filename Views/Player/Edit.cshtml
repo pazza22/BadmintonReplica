@@ -1,0 +1,102 @@
+@model badminton4all.Models.Player
+
+@{
+    ViewData["Title"] = "Edit Profile";
+    var courts = ViewBag.Courts as List<string>;
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-warning">
+                    <h3 class="mb-0"><i class="fas fa-edit"></i> Edit Player Profile</h3>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit" method="post">
+                        <input type="hidden" asp-for="Id" />
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="FullName" class="form-label"></label>
+                            <input asp-for="FullName" class="form-control" />
+                            <span asp-validation-for="FullName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="PhoneNumber" class="form-label"></label>
+                            <input asp-for="PhoneNumber" class="form-control" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="SkillLevel" class="form-label"></label>
+                            <select asp-for="SkillLevel" class="form-select" asp-items="Html.GetEnumSelectList<badminton4all.Models.SkillLevel>()">
+                            </select>
+                            <span asp-validation-for="SkillLevel" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ProfilePictureUrl" class="form-label"></label>
+                            <input asp-for="ProfilePictureUrl" class="form-control" />
+                            <span asp-validation-for="ProfilePictureUrl" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Preferred Courts</label>
+                            <div class="card">
+                                <div class="card-body">
+                                    @if (courts != null && courts.Any())
+                                    {
+                                        @foreach (var court in courts)
+                                        {
+                                            var isChecked = Model.PreferredCourts.Contains(court);
+                                            <div class="form-check">
+                                                <input class="form-check-input" 
+                                                       type="checkbox" 
+                                                       name="selectedCourts" 
+                                                       value="@court" 
+                                                       id="court_@court.Replace(" ", "_")"
+                                                       @(isChecked ? "checked" : "")>
+                                                <label class="form-check-label" for="court_@court.Replace(" ", "_")">
+                                                    @court
+                                                </label>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-warning btn-lg">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+                            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+
+                    <hr class="my-4">
+                    
+                    <div class="text-center">
+                        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger">
+                            <i class="fas fa-trash"></i> Delete Account
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

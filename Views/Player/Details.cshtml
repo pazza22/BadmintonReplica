@@ -1,0 +1,201 @@
+@model badminton4all.Models.Player
+
+@{
+    ViewData["Title"] = "Player Profile";
+}
+
+<div class="container mt-4">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <!-- Profile Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <img src="@(Model.ProfilePictureUrl ?? "https://via.placeholder.com/150")" 
+                         alt="@Model.FullName" 
+                         class="rounded-circle mb-3" 
+                         style="width: 150px; height: 150px; object-fit: cover;">
+                    <h3>@Model.FullName</h3>
+                    <p class="text-muted">@Model.Email</p>
+                    @if (!string.IsNullOrEmpty(Model.PhoneNumber))
+                    {
+                        <p class="text-muted">@Model.PhoneNumber</p>
+                    }
+                    
+                    <div class="mb-3">
+                        <span class="badge @GetSkillLevelBadgeClass(Model.SkillLevel) fs-6">
+                            @Model.SkillLevel
+                        </span>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+                            <i class="fas fa-edit"></i> Edit Profile
+                        </a>
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to Players
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats and Details -->
+        <div class="col-md-8">
+            <!-- Stats Card -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Player Statistics</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-3 mb-3">
+                            <div class="stat-box">
+                                <h2 class="text-primary">#@Model.Ranking</h2>
+                                <p class="text-muted mb-0">Overall Ranking</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="stat-box">
+                                <h2 class="text-info">@Model.TotalMatches</h2>
+                                <p class="text-muted mb-0">Total Matches</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="stat-box">
+                                <h2 class="text-success">@Model.Wins</h2>
+                                <p class="text-muted mb-0">Wins</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="stat-box">
+                                <h2 class="text-danger">@Model.Losses</h2>
+                                <p class="text-muted mb-0">Losses</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-3">
+                        <h4 class="text-primary">@Model.WinRate.ToString("0.0")%</h4>
+                        <p class="text-muted mb-0">Win Rate</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preferred Courts -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-map-marker-alt"></i> Preferred Courts</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.PreferredCourts.Any())
+                    {
+                        <div class="d-flex flex-wrap gap-2">
+                            @foreach (var court in Model.PreferredCourts)
+                            {
+                                <span class="badge bg-success fs-6">
+                                    <i class="fas fa-map-pin"></i> @court
+                                </span>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted mb-0">No preferred courts selected</p>
+                    }
+                </div>
+            </div>
+
+            <!-- Match History -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-warning">
+                    <h5 class="mb-0"><i class="fas fa-history"></i> Match History</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.MatchHistory.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Opponent</th>
+                                        <th>Score</th>
+                                        <th>Type</th>
+                                        <th>Court</th>
+                                        <th>Result</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var match in Model.MatchHistory.OrderByDescending(m => m.MatchDate))
+                                    {
+                                        <tr>
+                                            <td>@match.MatchDate.ToString("MMM dd, yyyy")</td>
+                                            <td>@match.Opponent</td>
+                                            <td>@match.PlayerScore - @match.OpponentScore</td>
+                                            <td>
+                                                <span class="badge bg-secondary">@match.MatchType</span>
+                                            </td>
+                                            <td><small>@match.Court</small></td>
+                                            <td>
+                                                @if (match.IsWin)
+                                                {
+                                                    <span class="badge bg-success">Win</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-danger">Loss</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted mb-0">No match history available</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <p class="text-muted">
+                <small>Member since: @Model.RegistrationDate.ToString("MMMM dd, yyyy")</small>
+            </p>
+        </div>
+    </div>
+</div>
+
+@functions {
+    string GetSkillLevelBadgeClass(badminton4all.Models.SkillLevel skillLevel)
+    {
+        return skillLevel switch
+        {
+            badminton4all.Models.SkillLevel.Beginner => "bg-secondary",
+            badminton4all.Models.SkillLevel.Intermediate => "bg-info",
+            badminton4all.Models.SkillLevel.Advanced => "bg-warning text-dark",
+            badminton4all.Models.SkillLevel.Expert => "bg-danger",
+            badminton4all.Models.SkillLevel.Professional => "bg-dark",
+            _ => "bg-secondary"
+        };
+    }
+}
+
+<style>
+    .stat-box {
+        padding: 20px;
+        border-radius: 8px;
+        background-color: #f8f9fa;
+    }
+</style>

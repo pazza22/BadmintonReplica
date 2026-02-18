@@ -1,0 +1,171 @@
+@model IEnumerable<badminton4all.Models.Player>
+
+@{
+    ViewData["Title"] = "Player Rankings";
+}
+
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-md-12 text-center">
+            <h1 class="display-3">
+                <i class="fas fa-trophy text-warning"></i> Player Rankings
+            </h1>
+            <p class="lead">Top players in our badminton community</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th style="width: 80px;">Rank</th>
+                                    <th>Player</th>
+                                    <th>Skill Level</th>
+                                    <th class="text-center">Matches</th>
+                                    <th class="text-center">Wins</th>
+                                    <th class="text-center">Losses</th>
+                                    <th class="text-center">Win Rate</th>
+                                    <th style="width: 120px;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var player in Model)
+                                {
+                                    var rankClass = player.Ranking switch
+                                    {
+                                        1 => "rank-gold",
+                                        2 => "rank-silver",
+                                        3 => "rank-bronze",
+                                        _ => ""
+                                    };
+
+                                    <tr>
+                                        <td class="align-middle">
+                                            <div class="rank-badge @rankClass">
+                                                @if (player.Ranking <= 3)
+                                                {
+                                                    <i class="fas fa-medal"></i>
+                                                }
+                                                <strong>#@player.Ranking</strong>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="d-flex align-items-center">
+                                                <img src="@(player.ProfilePictureUrl ?? "https://via.placeholder.com/150")" 
+                                                     alt="@player.FullName" 
+                                                     class="rounded-circle me-2" 
+                                                     style="width: 40px; height: 40px; object-fit: cover;">
+                                                <div>
+                                                    <strong>@player.FullName</strong>
+                                                    <br>
+                                                    <small class="text-muted">@player.Email</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <span class="badge @GetSkillLevelBadgeClass(player.SkillLevel)">
+                                                @player.SkillLevel
+                                            </span>
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            <strong>@player.TotalMatches</strong>
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            <span class="text-success"><strong>@player.Wins</strong></span>
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            <span class="text-danger"><strong>@player.Losses</strong></span>
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            <div class="progress" style="height: 25px;">
+                                                <div class="progress-bar @GetWinRateProgressClass(player.WinRate)" 
+                                                     role="progressbar" 
+                                                     style="width: @player.WinRate%" 
+                                                     aria-valuenow="@player.WinRate" 
+                                                     aria-valuemin="0" 
+                                                     aria-valuemax="100">
+                                                    @player.WinRate.ToString("0.0")%
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <a asp-action="Details" asp-route-id="@player.Id" class="btn btn-sm btn-primary">
+                                                <i class="fas fa-eye"></i> View
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    @if (!Model.Any())
+                    {
+                        <div class="alert alert-info text-center">
+                            <i class="fas fa-info-circle"></i> No players registered yet.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-12 text-center">
+            <a asp-action="Register" class="btn btn-primary btn-lg">
+                <i class="fas fa-user-plus"></i> Join the Rankings
+            </a>
+        </div>
+    </div>
+</div>
+
+@functions {
+    string GetSkillLevelBadgeClass(badminton4all.Models.SkillLevel skillLevel)
+    {
+        return skillLevel switch
+        {
+            badminton4all.Models.SkillLevel.Beginner => "bg-secondary",
+            badminton4all.Models.SkillLevel.Intermediate => "bg-info",
+            badminton4all.Models.SkillLevel.Advanced => "bg-warning text-dark",
+            badminton4all.Models.SkillLevel.Expert => "bg-danger",
+            badminton4all.Models.SkillLevel.Professional => "bg-dark",
+            _ => "bg-secondary"
+        };
+    }
+
+    string GetWinRateProgressClass(double winRate)
+    {
+        if (winRate >= 70) return "bg-success";
+        if (winRate >= 50) return "bg-info";
+        if (winRate >= 30) return "bg-warning";
+        return "bg-danger";
+    }
+}
+
+<style>
+    .rank-badge {
+        display: inline-block;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 18px;
+    }
+
+    .rank-gold {
+        background: linear-gradient(135deg, #FFD700, #FFA500);
+        color: white;
+    }
+
+    .rank-silver {
+        background: linear-gradient(135deg, #C0C0C0, #A9A9A9);
+        color: white;
+    }
+
+    .rank-bronze {
+        background: linear-gradient(135deg, #CD7F32, #A0522D);
+        color: white;
+    }
+</style>

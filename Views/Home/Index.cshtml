@@ -1,0 +1,71 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <div class="jumbotron bg-light p-5 rounded-3 mb-4">
+        <h1 class="display-2 fw-bold">🏸 Badminton4All</h1>
+        <p class="lead fs-4">Your Ultimate Badminton Community Portal</p>
+        <hr class="my-4">
+        <p class="fs-5">Connect with players, track your stats, and improve your game!</p>
+        <a class="btn btn-primary btn-lg m-2" asp-controller="Player" asp-action="Register" role="button">
+            <i class="fas fa-user-plus"></i> Join Now
+        </a>
+        <a class="btn btn-outline-primary btn-lg m-2" asp-controller="Player" asp-action="Rankings" role="button">
+            <i class="fas fa-trophy"></i> View Rankings
+        </a>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body text-center">
+                <div class="mb-3">
+                    <i class="fas fa-user-circle fa-4x text-primary"></i>
+                </div>
+                <h3 class="card-title">Player Profiles</h3>
+                <p class="card-text">Create your profile and showcase your skills, achievements, and match history.</p>
+                <a asp-controller="Player" asp-action="Index" class="btn btn-primary">Browse Players</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body text-center">
+                <div class="mb-3">
+                    <i class="fas fa-chart-line fa-4x text-success"></i>
+                </div>
+                <h3 class="card-title">Track Your Stats</h3>
+                <p class="card-text">Monitor your performance with detailed match history, win rates, and rankings.</p>
+                <a asp-controller="Player" asp-action="Rankings" class="btn btn-success">View Rankings</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body text-center">
+                <div class="mb-3">
+                    <i class="fas fa-map-marker-alt fa-4x text-warning"></i>
+                </div>
+                <h3 class="card-title">Find Courts</h3>
+                <p class="card-text">Discover and connect with players at your preferred badminton courts.</p>
+                <a asp-controller="Player" asp-action="Register" class="btn btn-warning">Get Started</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5 mb-5">
+    <div class="col-md-12">
+        <div class="card bg-primary text-white shadow">
+            <div class="card-body text-center p-5">
+                <h2 class="mb-3">Ready to Join?</h2>
+                <p class="lead">Sign up today and become part of our growing badminton community!</p>
+                <a asp-controller="Player" asp-action="Register" class="btn btn-light btn-lg mt-3">
+                    <i class="fas fa-rocket"></i> Register Now - It's Free!
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
