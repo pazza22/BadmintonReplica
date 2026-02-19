@@ -49,7 +49,7 @@ namespace badminton4all.Tests.Models
             var totalMatches = player.TotalMatches;
 
             // Assert
-            Assert.AreEqual(3, totalMatches);
+            Assert.AreEqual(4, totalMatches);
         }
 
         [TestMethod]
